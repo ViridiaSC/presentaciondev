@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jhonatan Salazar Jaramillo — Desarrollador de Software</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #020b18;
+    --deep: #030f1f;
+    --mid: #061428;
+    --surface: #0a1f38;
+    --card: #0d2544;
+    --border: rgba(0,140,255,0.12);
+    --accent: #0088ff;
+    --accent-bright: #00aaff;
+    --accent-glow: rgba(0,136,255,0.25);
+    --accent-dim: rgba(0,136,255,0.08);
+    --white: #ffffff;
+    --off-white: #e8f0f8;
+    --muted: rgba(232,240,248,0.5);
+    --faint: rgba(232,240,248,0.18);
+    --gold: #c8a96e;
+    --gold-dim: rgba(200,169,110,0.15);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--navy);
+    color: var(--off-white);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--accent-bright);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, opacity 0.2s;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(0,170,255,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.18s ease, width 0.3s, height 0.3s, border-color 0.3s;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--deep); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+  /* NOISE TEXTURE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 20px 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: transparent;
+    transition: background 0.4s, backdrop-filter 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(2,11,24,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--accent-bright); }
+  .nav-links {
+    display: flex; gap: 40px; list-style: none;
+  }
+  .nav-links a {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0;
+    width: 0; height: 1px;
+    background: var(--accent-bright);
+    transition: width 0.3s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* SECTIONS */
+  section { position: relative; z-index: 1; }
+
+  /* ===================== HERO ===================== */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 120px 60px 80px;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,100,220,0.15) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 80% 80%, rgba(0,80,180,0.08) 0%, transparent 60%),
+                linear-gradient(180deg, var(--deep) 0%, var(--navy) 100%);
+  }
+
+  /* Grid lines */
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: 
+      linear-gradient(rgba(0,136,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,136,255,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 80%);
+  }
+
+  /* Floating orbs */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    animation: float 8s ease-in-out infinite;
+  }
+  .orb-1 {
+    width: 500px; height: 500px;
+    background: rgba(0,100,255,0.07);
+    top: -100px; right: -100px;
+    animation-delay: 0s;
+  }
+  .orb-2 {
+    width: 300px; height: 300px;
+    background: rgba(0,150,255,0.06);
+    bottom: -50px; left: -50px;
+    animation-delay: -4s;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(1.05); }
+  }
+
+  .hero-content {
+    position: relative;
+    max-width: 900px;
+    text-align: center;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 18px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    background: var(--accent-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--accent-bright);
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    animation: fadeUp 0.8s ease forwards;
+    opacity: 0;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent-bright);
+    box-shadow: 0 0 8px var(--accent-bright);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 8vw, 110px);
+    line-height: 0.92;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 32px;
+    animation: fadeUp 0.8s ease 0.15s forwards;
+    opacity: 0;
+  }
+  .hero-title .line-accent { 
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(0,170,255,0.6);
+    display: block;
+  }
+  .hero-title .glow-word {
+    color: var(--accent-bright);
+    text-shadow: 0 0 60px rgba(0,170,255,0.4);
+  }
+
+  .hero-sub {
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 560px;
+    margin: 0 auto 48px;
+    animation: fadeUp 0.8s ease 0.3s forwards;
+    opacity: 0;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 40px;
+    background: var(--accent);
+    color: var(--white);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    animation: fadeUp 0.8s ease 0.45s forwards;
+    opacity: 0;
+    box-shadow: 0 0 30px rgba(0,136,255,0.3);
+  }
+  .hero-cta::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+  }
+  .hero-cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 40px rgba(0,136,255,0.5);
+  }
+  .hero-cta svg { width: 16px; height: 16px; }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center;
+    gap: 8px;
+    animation: fadeIn 1s ease 1s forwards;
+    opacity: 0;
+  }
+  .hero-scroll span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(var(--accent-bright), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  /* STATS ROW */
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-top: 70px;
+    padding-top: 50px;
+    border-top: 1px solid var(--border);
+    animation: fadeUp 0.8s ease 0.6s forwards;
+    opacity: 0;
+  }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: var(--white);
+    line-height: 1;
+  }
+  .stat-num span { color: var(--accent-bright); }
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* ===================== ABOUT ===================== */
+  #about {
+    padding: 120px 60px;
+    background: linear-gradient(180deg, var(--navy) 0%, var(--deep) 100%);
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent-bright);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::before {
+    content: '';
+    width: 30px; height: 1px;
+    background: var(--accent-bright);
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(38px, 5vw, 64px);
+    line-height: 1;
+    color: var(--white);
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .about-text p {
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--muted);
+    margin-bottom: 20px;
+    font-weight: 300;
+  }
+  .about-text p strong { color: var(--off-white); font-weight: 500; }
+
+  .tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 32px;
+  }
+  .tech-pill {
+    padding: 7px 16px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent-bright);
+    background: var(--accent-dim);
+    letter-spacing: 1px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .tech-pill:hover {
+    background: rgba(0,136,255,0.15);
+    border-color: rgba(0,170,255,0.4);
+  }
+
+  .about-visual {
+    position: relative;
+  }
+  .about-card-main {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-card-main::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .card-avatar {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #0044aa);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: white;
+    margin-bottom: 20px;
+    box-shadow: 0 0 30px rgba(0,136,255,0.3);
+    letter-spacing: 2px;
+  }
+  .card-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .card-role {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent-bright);
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+  }
+  .card-trait {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .card-trait:last-child { border-bottom: none; }
+  .trait-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent-bright);
+    flex-shrink: 0;
+    box-shadow: 0 0 8px var(--accent-bright);
+  }
+
+  /* ===================== SERVICES ===================== */
+  #services {
+    padding: 120px 60px;
+    background: var(--deep);
+  }
+  .services-header { text-align: center; margin-bottom: 70px; }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .service-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 36px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    cursor: default;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .service-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(0,136,255,0.3);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 30px var(--accent-glow);
+  }
+  .service-card:hover::before { opacity: 1; }
+
+  .service-icon {
+    width: 48px; height: 48px;
+    background: var(--accent-dim);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 24px;
+    font-size: 20px;
+    transition: background 0.3s;
+  }
+  .service-card:hover .service-icon {
+    background: rgba(0,136,255,0.15);
+    border-color: rgba(0,170,255,0.4);
+  }
+  .service-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+  .service-desc {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .service-num {
+    position: absolute;
+    top: 20px; right: 24px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: rgba(0,136,255,0.05);
+    line-height: 1;
+  }
+
+  /* ===================== WHY ===================== */
+  #why {
+    padding: 120px 60px;
+    background: linear-gradient(180deg, var(--deep) 0%, var(--mid) 100%);
+  }
+  .why-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    max-width: 1100px;
+    margin: 60px auto 0;
+    align-items: start;
+  }
+  .why-list { display: flex; flex-direction: column; gap: 20px; }
+  .why-item {
+    display: flex;
+    gap: 20px;
+    padding: 24px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .why-item:hover {
+    border-color: rgba(0,136,255,0.3);
+    transform: translateX(6px);
+  }
+  .why-icon {
+    width: 40px; height: 40px;
+    flex-shrink: 0;
+    background: var(--accent-dim);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .why-info h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .why-info p {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .why-visual {
+    position: sticky;
+    top: 100px;
+  }
+  .why-big-card {
+    background: linear-gradient(135deg, var(--card), var(--surface));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 48px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .why-big-card::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle at center, rgba(0,136,255,0.05), transparent 60%);
+  }
+  .big-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 120px;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(0,170,255,0.3);
+    margin-bottom: 8px;
+  }
+  .big-label {
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+  .why-quote {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--off-white);
+    font-style: italic;
+    opacity: 0.7;
+    border-left: 2px solid var(--accent);
+    padding-left: 20px;
+    text-align: left;
+  }
+
+  /* ===================== PORTFOLIO ===================== */
+  #portfolio {
+    padding: 120px 60px;
+    background: var(--mid);
+  }
+  .portfolio-header { text-align: center; margin-bottom: 70px; }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+  }
+  .project-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 40px var(--accent-glow);
+  }
+
+  .project-preview {
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .preview-1 { background: linear-gradient(135deg, #061428, #0a2a50, #062040); }
+  .preview-2 { background: linear-gradient(135deg, #050e20, #091c3a, #050d1f); }
+  .preview-3 { background: linear-gradient(135deg, #04111e, #082033, #04101c); }
+  .preview-4 { background: linear-gradient(135deg, #060f22, #0a1e3e, #060f22); }
+
+  .preview-mockup {
+    width: 80%;
+    max-width: 320px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(0,136,255,0.15);
+    border-radius: 8px;
+    padding: 16px;
+    position: relative;
+  }
+  .mockup-bar {
+    display: flex; gap: 6px; margin-bottom: 12px;
+  }
+  .mockup-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  .mockup-line {
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(0,136,255,0.1);
+    margin-bottom: 8px;
+  }
+  .mockup-line.w80 { width: 80%; }
+  .mockup-line.w60 { width: 60%; }
+  .mockup-line.w90 { width: 90%; }
+  .mockup-line.accent { background: rgba(0,136,255,0.25); }
+  .preview-glow {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(0,136,255,0.1), transparent 70%);
+  }
+  .preview-overlay {
+    position: absolute; inset: 0;
+    background: rgba(2,11,24,0.6);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .project-card:hover .preview-overlay { opacity: 1; }
+  .overlay-btn {
+    padding: 10px 24px;
+    border: 1px solid var(--accent-bright);
+    color: var(--accent-bright);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-radius: 3px;
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .overlay-btn:hover { background: rgba(0,170,255,0.1); }
+
+  .project-info {
+    padding: 28px 28px 24px;
+  }
+  .project-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent-bright);
+    margin-bottom: 10px;
+  }
+  .project-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+  .project-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+  .project-tech {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  .ptag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: 2px;
+    background: var(--accent-dim);
+    color: var(--accent-bright);
+    border: 1px solid var(--border);
+  }
+
+  /* ===================== PROCESS ===================== */
+  #process {
+    padding: 120px 60px;
+    background: linear-gradient(180deg, var(--mid) 0%, var(--deep) 100%);
+  }
+  .process-header { text-align: center; margin-bottom: 80px; }
+
+  .process-track {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .process-line {
+    position: absolute;
+    left: 30px; top: 30px; bottom: 30px;
+    width: 1px;
+    background: linear-gradient(var(--accent), rgba(0,136,255,0.1));
+  }
+
+  .process-step {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .process-step:last-child { border-bottom: none; }
+
+  .step-num-wrap {
+    position: relative;
+    flex-shrink: 0;
+  }
+  .step-num {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--accent-bright);
+    position: relative;
+    z-index: 1;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .process-step:hover .step-num {
+    border-color: var(--accent-bright);
+    box-shadow: 0 0 20px var(--accent-glow);
+  }
+
+  .step-content { flex: 1; padding-top: 14px; }
+  .step-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--accent-bright);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .step-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+  .step-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+    font-weight: 300;
+    max-width: 600px;
+  }
+
+  /* ===================== PRICING ===================== */
+  #pricing {
+    padding: 120px 60px;
+    background: var(--deep);
+  }
+  .pricing-header { text-align: center; margin-bottom: 70px; }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .pricing-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 40px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .pricing-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  .pricing-card.featured {
+    border-color: rgba(0,136,255,0.4);
+    background: linear-gradient(160deg, var(--surface), var(--card));
+    box-shadow: 0 0 40px var(--accent-glow);
+  }
+  .pricing-card.featured::before {
+    content: 'MÁS POPULAR';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 20px;
+    background: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: white;
+    border-radius: 0 0 6px 6px;
+  }
+  .pricing-tier {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-bright);
+    margin-bottom: 16px;
+    margin-top: 12px;
+  }
+  .pricing-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .pricing-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+  .pricing-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 28px;
+  }
+  .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .pricing-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+  .pricing-features li::before {
+    content: '✓';
+    color: var(--accent-bright);
+    flex-shrink: 0;
+    font-size: 12px;
+    margin-top: 1px;
+  }
+  .pricing-cta {
+    display: block;
+    text-align: center;
+    margin-top: 36px;
+    padding: 13px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--off-white);
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .pricing-card.featured .pricing-cta {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .pricing-cta:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  /* ===================== FINAL CTA ===================== */
+  #cta {
+    padding: 150px 60px;
+    background: linear-gradient(180deg, var(--deep) 0%, var(--navy) 50%, var(--deep) 100%);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  #cta::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,100,255,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-content { position: relative; }
+  .cta-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent-bright);
+    margin-bottom: 28px;
+  }
+  .cta-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 7vw, 90px);
+    line-height: 1;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 24px;
+  }
+  .cta-title span { color: var(--accent-bright); }
+  .cta-sub {
+    font-size: 15px;
+    color: var(--muted);
+    margin-bottom: 50px;
+    font-weight: 300;
+  }
+  .cta-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-primary {
+    padding: 16px 40px;
+    background: var(--accent);
+    color: white;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-radius: 4px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 0 30px rgba(0,136,255,0.3);
+  }
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 40px rgba(0,136,255,0.5);
+  }
+  .btn-ghost {
+    padding: 16px 40px;
+    border: 1px solid var(--border);
+    color: var(--off-white);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-radius: 4px;
+    transition: border-color 0.3s, color 0.3s;
+  }
+  .btn-ghost:hover {
+    border-color: rgba(0,136,255,0.5);
+    color: var(--accent-bright);
+  }
+
+  /* ===================== FOOTER ===================== */
+  footer {
+    padding: 50px 60px;
+    border-top: 1px solid var(--border);
+    background: var(--navy);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    gap: 20px;
+  }
+  .footer-brand {}
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 3px;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .footer-logo span { color: var(--accent-bright); }
+  .footer-role {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .footer-links {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    list-style: none;
+  }
+  .footer-links a {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--accent-bright); }
+  .footer-contact {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: flex-end;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .contact-icon { font-size: 14px; }
+  .footer-copy {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--faint);
+    padding-top: 30px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+
+  /* REVEAL ANIMATION */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* MOBILE */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    #hero, #about, #services, #why, #portfolio, #process, #pricing, #cta { padding: 80px 24px; }
+    footer { padding: 40px 24px; grid-template-columns: 1fr; text-align: center; }
+    .footer-contact { text-align: center; }
+    .contact-item { justify-content: center; }
+    .footer-links { justify-content: center; }
+    .hero-stats { gap: 30px; flex-wrap: wrap; }
+    .about-grid, .why-grid, .services-grid, .pricing-grid, .portfolio-grid { grid-template-columns: 1fr; }
+    .why-visual { position: static; }
+    .cta-title { font-size: 42px; }
+  }
+
+  /* GOLD ACCENT LINE */
+  .gold-line {
+    width: 40px; height: 2px;
+    background: linear-gradient(90deg, var(--gold), rgba(200,169,110,0.2));
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 12px;
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">JSJ<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">Sobre mí</a></li>
+    <li><a href="#services">Servicios</a></li>
+    <li><a href="#portfolio">Proyectos</a></li>
+    <li><a href="#pricing">Precios</a></li>
+    <li><a href="#cta">Contacto</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">Disponible para proyectos · 2025</div>
+
+    <h1 class="hero-title">
+      Construyo <span class="glow-word">Software</span>
+      <span class="line-accent">Avanzado &</span>
+      Soluciones Digitales
+    </h1>
+
+    <p class="hero-sub">
+      Desarrollo sitios web modernos, sistemas complejos y soluciones de software escalables.
+      <br><strong style="color:var(--off-white);font-weight:400">Desarrollador de 17 años enfocado en innovación y rendimiento.</strong>
+    </p>
+
+    <a href="#cta" class="hero-cta">
+      Iniciar tu Proyecto
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 8h10M9 4l4 4-4 4"/>
+      </svg>
+    </a>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">10<span>+</span></div>
+        <div class="stat-label">Proyectos Entregados</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">5<span>+</span></div>
+        <div class="stat-label">Tecnologías</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">100<span>%</span></div>
+        <div class="stat-label">Compromiso</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span>Bajar</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <div class="section-label">Quién Soy</div>
+      <h2 class="section-title">CONSTRUYENDO SISTEMAS<br>REALES Y ESCALABLES</h2>
+      <p>Soy <strong>Jhonatan Salazar Jaramillo</strong>, desarrollador de software de 17 años con un enfoque preciso en crear soluciones que funcionan a escala — no solo prototipos que se ven bien en demos.</p>
+      <p>Mi enfoque combina <strong>principios modernos de ingeniería</strong> con una búsqueda implacable de eficiencia. Cada línea de código tiene un propósito: resolver problemas reales, rápido.</p>
+      <p>Desde aplicaciones web dinámicas hasta sistemas backend completamente automatizados, aporto una <strong>profundidad técnica poco común para mi edad</strong> — combinada con la energía y adaptabilidad de un desarrollador de nueva generación.</p>
+
+      <div class="tech-stack">
+        <span class="tech-pill">JavaScript</span>
+        <span class="tech-pill">Python</span>
+        <span class="tech-pill">PHP</span>
+        <span class="tech-pill">HTML5</span>
+        <span class="tech-pill">CSS3</span>
+        <span class="tech-pill">Node.js</span>
+        <span class="tech-pill">SQL</span>
+        <span class="tech-pill">REST APIs</span>
+      </div>
+    </div>
+
+    <div class="about-visual reveal reveal-delay-2">
+      <div class="about-card-main">
+        <div class="card-avatar">JSJ</div>
+        <div class="card-name">Jhonatan Salazar Jaramillo</div>
+        <div class="card-role">// software_developer.exe</div>
+        <div class="card-trait"><div class="trait-dot"></div>Mentalidad Orientada a Soluciones</div>
+        <div class="card-trait"><div class="trait-dot"></div>Desarrollo Full-Stack</div>
+        <div class="card-trait"><div class="trait-dot"></div>Código Limpio y Documentado</div>
+        <div class="card-trait"><div class="trait-dot"></div>Enfocado en Rendimiento y Escalabilidad</div>
+        <div class="card-trait"><div class="trait-dot"></div>Aprendizaje Continuo · Siempre Evolucionando</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-header reveal">
+    <div class="section-label" style="justify-content:center">Lo Que Ofrezco</div>
+    <h2 class="section-title">SERVICIOS Y<br>CAPACIDADES</h2>
+  </div>
+
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-num">01</div>
+      <div class="service-icon">⚙️</div>
+      <div class="service-title">Desarrollo de Software Avanzado</div>
+      <p class="service-desc">Software completo construido para las exigencias del mundo real. Desde el diseño de arquitectura hasta el despliegue — engineered to last and scale.</p>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-num">02</div>
+      <div class="service-icon">🖥️</div>
+      <div class="service-title">Sistemas y Aplicaciones Personalizadas</div>
+      <p class="service-desc">Plataformas y sistemas de gestión a medida, construidos alrededor de tu flujo de trabajo exacto. Sin excesos — solo herramientas precisas que se adaptan a tu operación.</p>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-num">03</div>
+      <div class="service-icon">🤖</div>
+      <div class="service-title">Automatización de Procesos</div>
+      <p class="service-desc">Transforma tareas repetitivas en pipelines automatizados. Ahorra tiempo, reduce errores y deja que tus sistemas trabajen mientras descansas.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-num">04</div>
+      <div class="service-icon">🌐</div>
+      <div class="service-title">Desarrollo Web Moderno</div>
+      <p class="service-desc">Sitios web rápidos, responsivos y visualmente impactantes, construidos con estándares modernos — optimizados para rendimiento y experiencia de usuario.</p>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-num">05</div>
+      <div class="service-icon">📈</div>
+      <div class="service-title">Soluciones Escalables</div>
+      <p class="service-desc">Sistemas diseñados para crecer con tu negocio. Construidos sobre bases sólidas que manejan mayor carga sin comprometer la velocidad.</p>
+    </div>
+    <div class="service-card reveal reveal-delay-2" style="background:linear-gradient(135deg,var(--surface),var(--card));border-color:rgba(0,136,255,0.25)">
+      <div class="service-num">+</div>
+      <div class="service-icon">💡</div>
+      <div class="service-title">Soluciones Personalizadas</div>
+      <p class="service-desc">¿Tienes algo único en mente? Hablemos de tus necesidades específicas y diseñemos un enfoque que se adapte perfectamente a tu visión.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="reveal">
+      <div class="section-label">Ventaja Competitiva</div>
+      <h2 class="section-title">POR QUÉ ELEGIR<br>A JHONATAN</h2>
+    </div>
+
+    <div class="why-grid">
+      <div class="why-list">
+        <div class="why-item reveal">
+          <div class="why-icon">⚡</div>
+          <div class="why-info">
+            <h4>Desarrollo Rápido y Eficiente</h4>
+            <p>Flujos de trabajo optimizados y ejecución enfocada significan que tu proyecto se entrega en tiempo — sin sacrificar calidad.</p>
+          </div>
+        </div>
+        <div class="why-item reveal reveal-delay-1">
+          <div class="why-icon">✨</div>
+          <div class="why-info">
+            <h4>Código Limpio y Moderno</h4>
+            <p>Código legible y mantenible siguiendo las mejores prácticas de la industria. Tu base de código permanece limpia mientras crece.</p>
+          </div>
+        </div>
+        <div class="why-item reveal reveal-delay-2">
+          <div class="why-icon">🎯</div>
+          <div class="why-info">
+            <h4>Enfoque en Rendimiento y Escalabilidad</h4>
+            <p>Construido para el futuro, no solo para hoy. Decisiones de arquitectura tomadas pensando en el crecimiento desde el primer día.</p>
+          </div>
+        </div>
+        <div class="why-item reveal reveal-delay-3">
+          <div class="why-icon">🧠</div>
+          <div class="why-info">
+            <h4>Desarrollador Joven, Mentalidad Moderna</h4>
+            <p>Criado en la era digital, fluido en las últimas tecnologías y tendencias. Una perspectiva fresca con una profundidad técnica seria.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="why-visual reveal reveal-delay-2">
+        <div class="why-big-card">
+          <div class="big-num">17</div>
+          <div class="big-label">Años · Ya Construyendo</div>
+          <div class="why-quote">
+            "La edad es solo un número. La calidad del código, la profundidad del pensamiento y el compromiso con el cliente — eso es lo que define a un desarrollador."
+          </div>
+          <div style="margin-top:32px;padding-top:24px;border-top:1px solid var(--border);display:flex;gap:24px;justify-content:center">
+            <div style="text-align:center">
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--accent-bright)">JS</div>
+              <div style="font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase">JavaScript</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--accent-bright)">PY</div>
+              <div style="font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase">Python</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--accent-bright)">PHP</div>
+              <div style="font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase">Backend</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <div class="portfolio-header reveal">
+    <div class="section-label" style="justify-content:center">Trabajo Destacado</div>
+    <h2 class="section-title">PROYECTOS<br>SELECCIONADOS</h2>
+  </div>
+
+  <div class="portfolio-grid">
+    <!-- Proyecto 1 -->
+    <div class="project-card reveal">
+      <div class="project-preview preview-1">
+        <div class="preview-glow"></div>
+        <div class="preview-mockup">
+          <div class="mockup-bar">
+            <div class="mockup-dot" style="background:#ff5f57"></div>
+            <div class="mockup-dot" style="background:#febc2e"></div>
+            <div class="mockup-dot" style="background:#28c840"></div>
+          </div>
+          <div class="mockup-line accent w90"></div>
+          <div class="mockup-line w80"></div>
+          <div class="mockup-line w60"></div>
+          <div class="mockup-line accent w80" style="margin-top:16px"></div>
+          <div class="mockup-line w90"></div>
+        </div>
+        <div class="preview-overlay">
+          <button class="overlay-btn">Ver Detalles</button>
+        </div>
+      </div>
+      <div class="project-info">
+        <div class="project-tag">// Aplicación Web</div>
+        <div class="project-title">Plataforma de Gestión Empresarial</div>
+        <p class="project-desc">Sistema de gestión full-stack para PYMEs — control de inventario, facturación e informes en un solo dashboard unificado.</p>
+        <div class="project-tech">
+          <span class="ptag">JavaScript</span>
+          <span class="ptag">PHP</span>
+          <span class="ptag">MySQL</span>
+          <span class="ptag">CSS3</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Proyecto 2 -->
+    <div class="project-card reveal reveal-delay-1">
+      <div class="project-preview preview-2">
+        <div class="preview-glow"></div>
+        <div class="preview-mockup">
+          <div class="mockup-bar">
+            <div class="mockup-dot" style="background:#ff5f57"></div>
+            <div class="mockup-dot" style="background:#febc2e"></div>
+            <div class="mockup-dot" style="background:#28c840"></div>
+          </div>
+          <div class="mockup-line w60"></div>
+          <div class="mockup-line accent w90"></div>
+          <div class="mockup-line w80"></div>
+          <div style="display:flex;gap:6px;margin-top:14px">
+            <div style="flex:1;height:28px;background:rgba(0,136,255,0.15);border-radius:3px;border:1px solid rgba(0,136,255,0.2)"></div>
+            <div style="flex:1;height:28px;background:rgba(0,136,255,0.08);border-radius:3px;border:1px solid rgba(0,136,255,0.1)"></div>
+          </div>
+        </div>
+        <div class="preview-overlay">
+          <button class="overlay-btn">Ver Detalles</button>
+        </div>
+      </div>
+      <div class="project-info">
+        <div class="project-tag">// Sistema de Automatización</div>
+        <div class="project-title">Automatizador de Pipelines de Datos</div>
+        <p class="project-desc">Herramienta de automatización en Python que procesa, transforma y distribuye datos entre múltiples sistemas — ahorrando horas cada día.</p>
+        <div class="project-tech">
+          <span class="ptag">Python</span>
+          <span class="ptag">REST API</span>
+          <span class="ptag">Cron Jobs</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Proyecto 3 -->
+    <div class="project-card reveal">
+      <div class="project-preview preview-3">
+        <div class="preview-glow"></div>
+        <div class="preview-mockup">
+          <div class="mockup-bar">
+            <div class="mockup-dot" style="background:#ff5f57"></div>
+            <div class="mockup-dot" style="background:#febc2e"></div>
+            <div class="mockup-dot" style="background:#28c840"></div>
+          </div>
+          <div class="mockup-line accent w80"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px">
+            <div style="height:36px;background:rgba(0,136,255,0.12);border-radius:4px;border:1px solid rgba(0,136,255,0.15)"></div>
+            <div style="height:36px;background:rgba(0,136,255,0.07);border-radius:4px;border:1px solid rgba(0,136,255,0.1)"></div>
+            <div style="height:36px;background:rgba(0,136,255,0.07);border-radius:4px;border:1px solid rgba(0,136,255,0.1)"></div>
+            <div style="height:36px;background:rgba(0,136,255,0.12);border-radius:4px;border:1px solid rgba(0,136,255,0.15)"></div>
+          </div>
+        </div>
+        <div class="preview-overlay">
+          <button class="overlay-btn">Ver Detalles</button>
+        </div>
+      </div>
+      <div class="project-info">
+        <div class="project-tag">// E-Commerce</div>
+        <div class="project-title">Tienda Digital y CMS</div>
+        <p class="project-desc">Solución de e-commerce personalizada con gestión de contenido, catálogo de productos e integración de pagos — construida desde cero.</p>
+        <div class="project-tech">
+          <span class="ptag">HTML5</span>
+          <span class="ptag">CSS3</span>
+          <span class="ptag">JavaScript</span>
+          <span class="ptag">PHP</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Proyecto 4 -->
+    <div class="project-card reveal reveal-delay-1">
+      <div class="project-preview preview-4">
+        <div class="preview-glow"></div>
+        <div class="preview-mockup">
+          <div class="mockup-bar">
+            <div class="mockup-dot" style="background:#ff5f57"></div>
+            <div class="mockup-dot" style="background:#febc2e"></div>
+            <div class="mockup-dot" style="background:#28c840"></div>
+          </div>
+          <div class="mockup-line w90"></div>
+          <div class="mockup-line accent w60"></div>
+          <div style="height:32px;background:rgba(0,136,255,0.1);border-radius:4px;border:1px solid rgba(0,136,255,0.2);margin-top:10px;display:flex;align-items:center;padding:0 10px">
+            <div style="width:8px;height:8px;border-radius:50%;background:rgba(0,170,255,0.6);margin-right:8px"></div>
+            <div style="flex:1;height:4px;background:rgba(0,136,255,0.15);border-radius:2px"></div>
+          </div>
+        </div>
+        <div class="preview-overlay">
+          <button class="overlay-btn">Ver Detalles</button>
+        </div>
+      </div>
+      <div class="project-info">
+        <div class="project-tag">// API y Backend</div>
+        <div class="project-title">Capa de Servicios REST API</div>
+        <p class="project-desc">Arquitectura RESTful escalable que sirve múltiples aplicaciones cliente con autenticación, límites de tasa y registro de eventos.</p>
+        <div class="project-tech">
+          <span class="ptag">Python</span>
+          <span class="ptag">Node.js</span>
+          <span class="ptag">REST API</span>
+          <span class="ptag">JSON</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="process-header reveal">
+    <div class="section-label" style="justify-content:center">Cómo Trabajo</div>
+    <h2 class="section-title">EL PROCESO</h2>
+  </div>
+
+  <div class="process-track">
+    <div class="process-line"></div>
+
+    <div class="process-step reveal">
+      <div class="step-num-wrap">
+        <div class="step-num">01</div>
+      </div>
+      <div class="step-content">
+        <div class="step-label">Fase 01</div>
+        <div class="step-title">Análisis de la Idea</div>
+        <p class="step-desc">Comenzamos entendiendo en profundidad tus objetivos, limitaciones y requisitos. Esta fase define qué necesita construirse, para quién y por qué — para que nunca construyamos lo incorrecto.</p>
+      </div>
+    </div>
+
+    <div class="process-step reveal">
+      <div class="step-num-wrap">
+        <div class="step-num">02</div>
+      </div>
+      <div class="step-content">
+        <div class="step-label">Fase 02</div>
+        <div class="step-title">Diseño del Sistema</div>
+        <p class="step-desc">Primero la arquitectura, luego el código. Diseño la estructura del sistema, los modelos de datos y el stack tecnológico — tomando decisiones estratégicas que determinarán qué tan bien escala y rinde tu software.</p>
+      </div>
+    </div>
+
+    <div class="process-step reveal">
+      <div class="step-num-wrap">
+        <div class="step-num">03</div>
+      </div>
+      <div class="step-content">
+        <div class="step-label">Fase 03</div>
+        <div class="step-title">Desarrollo</div>
+        <p class="step-desc">Código limpio, documentado y probado — escrito con eficiencia. Te mantengo actualizado durante todo el proceso con previsualizaciones funcionales, sin sorpresas al final. Las iteraciones son rápidas y enfocadas.</p>
+      </div>
+    </div>
+
+    <div class="process-step reveal">
+      <div class="step-num-wrap">
+        <div class="step-num">04</div>
+      </div>
+      <div class="step-content">
+        <div class="step-label">Fase 04</div>
+        <div class="step-title">Entrega y Soporte</div>
+        <p class="step-desc">Un producto pulido y completamente probado llega a tus manos. Entrega completa con documentación, capacitación opcional y soporte continuo — porque la relación no termina en el lanzamiento.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="pricing-header reveal">
+    <div class="section-label" style="justify-content:center">Inversión</div>
+    <h2 class="section-title">NIVELES DE SERVICIO</h2>
+    <p style="color:var(--muted);font-size:14px;max-width:500px;margin:16px auto 0;font-weight:300">Precios personalizados para cada proyecto. Estos niveles son una referencia de partida — cada solución se ajusta a tus necesidades exactas.</p>
+  </div>
+
+  <div class="pricing-grid">
+    <!-- Básico -->
+    <div class="pricing-card reveal">
+      <div class="pricing-tier">// Nivel 01</div>
+      <div class="pricing-name">Básico</div>
+      <div class="pricing-sub">Desarrollo Web — Perfecto para landing pages, portafolios y sitios empresariales simples.</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li>Sitio web responsivo HTML/CSS/JS</li>
+        <li>Hasta 5 páginas o secciones</li>
+        <li>Integración de formulario de contacto</li>
+        <li>Optimización de rendimiento</li>
+        <li>Diseño mobile-first</li>
+        <li>1 ronda de revisión</li>
+      </ul>
+      <a href="#cta" class="pricing-cta">Comenzar</a>
+    </div>
+
+    <!-- Profesional -->
+    <div class="pricing-card featured reveal reveal-delay-1">
+      <div class="pricing-tier">// Nivel 02</div>
+      <div class="pricing-name">Profesional</div>
+      <div class="pricing-sub">Sistemas Personalizados — Ideal para empresas que necesitan herramientas de gestión y aplicaciones web a medida.</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li>Aplicación web full-stack</li>
+        <li>Diseño e integración de base de datos</li>
+        <li>Panel de administración y CMS</li>
+        <li>Sistema de autenticación de usuarios</li>
+        <li>Desarrollo de REST API</li>
+        <li>3 rondas de revisión</li>
+        <li>Soporte 30 días post-lanzamiento</li>
+      </ul>
+      <a href="#cta" class="pricing-cta">Comenzar</a>
+    </div>
+
+    <!-- Avanzado -->
+    <div class="pricing-card reveal reveal-delay-2">
+      <div class="pricing-tier">// Nivel 03</div>
+      <div class="pricing-name">Avanzado</div>
+      <div class="pricing-sub">Software y Automatización — Para sistemas complejos, automatizaciones y soluciones de nivel empresarial.</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li>Arquitectura de software personalizada</li>
+        <li>Pipelines de automatización de procesos</li>
+        <li>Integraciones multi-sistema</li>
+        <li>Diseño de infraestructura escalable</li>
+        <li>Ecosistema avanzado de APIs</li>
+        <li>Auditoría de rendimiento y seguridad</li>
+        <li>Revisiones ilimitadas</li>
+        <li>Soporte 90 días post-lanzamiento</li>
+      </ul>
+      <a href="#cta" class="pricing-cta">Comenzar</a>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="cta">
+  <div class="cta-content reveal">
+    <div class="cta-eyebrow">¿Listo para construir algo grande?</div>
+    <h2 class="cta-title">
+      Convierte tu Idea en<br>
+      <span>Software Poderoso</span>
+    </h2>
+    <p class="cta-sub">Hablemos de tu proyecto y hagámoslo realidad — rápido, limpio y construido para escalar.</p>
+    <div class="cta-buttons">
+      <a href="mailto:hello@jhonatan.dev" class="btn-primary">Solicitar un Proyecto</a>
+      <a href="#portfolio" class="btn-ghost">Ver mi Trabajo</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <div class="footer-logo">Jhonatan<span>.</span></div>
+    <div class="footer-role">Desarrollador de Software</div>
+  </div>
+  <ul class="footer-links">
+    <li><a href="#about">Sobre mí</a></li>
+    <li><a href="#services">Servicios</a></li>
+    <li><a href="#portfolio">Proyectos</a></li>
+    <li><a href="#process">Proceso</a></li>
+    <li><a href="#pricing">Precios</a></li>
+  </ul>
+  <div class="footer-contact">
+    <div class="contact-item">
+      <span class="contact-icon">📸</span>
+      <span>@jhonatan.dev</span>
+    </div>
+    <div class="contact-item">
+      <span class="contact-icon">✉️</span>
+      <span>hello@jhonatan.dev</span>
+    </div>
+  </div>
+  <div class="footer-copy">
+    © 2025 Jhonatan Salazar Jaramillo — Todos los Derechos Reservados · Construido con precisión
+  </div>
+</footer>
+
+<script>
+  // CURSOR
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+  function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+  document.querySelectorAll('a, button, .service-card, .project-card, .why-item').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'translate(-50%,-50%) scale(2)';
+      ring.style.width = '60px'; ring.style.height = '60px';
+      ring.style.borderColor = 'rgba(0,170,255,0.8)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+      ring.style.width = '36px'; ring.style.height = '36px';
+      ring.style.borderColor = 'rgba(0,170,255,0.5)';
+    });
+  });
+
+  // NAV SCROLL
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // REVEAL ON SCROLL
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => io.observe(el));
+
+  // COUNTER ANIMATION
+  function animateCount(el, target) {
+    let start = 0;
+    const duration = 1500;
+    const step = timestamp => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(eased * target);
+      if (progress < 1) requestAnimationFrame(step);
+      else el.textContent = target;
+    };
+    requestAnimationFrame(step);
+  }
+
+  // SMOOTH ACTIVE NAV
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  const sectionObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(link => {
+          link.style.color = link.getAttribute('href') === '#' + e.target.id
+            ? 'var(--white)' : '';
+        });
+      }
+    });
+  }, { threshold: 0.5 });
+  sections.forEach(s => sectionObserver.observe(s));
+</script>
+</body>
+</html>
